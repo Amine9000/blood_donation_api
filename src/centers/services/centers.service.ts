@@ -33,6 +33,6 @@ export class CentersService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} center`;
+    return this.centerRepository.delete({ id });
   }
 }

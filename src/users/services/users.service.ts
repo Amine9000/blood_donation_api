@@ -6,6 +6,7 @@ import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { RolesService } from './roles.service';
 import { hash } from 'bcrypt';
+import { LevelsService } from './levels.service';
 
 @Injectable()
 export class UsersService {
@@ -13,6 +14,7 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private readonly rolesService: RolesService,
+    private readonly levelsService: LevelsService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -20,6 +22,7 @@ export class UsersService {
       createUserDto;
     this.isValidCreateUserData(createUserDto);
     const rolesEntities = await this.rolesService.findByIds(roles);
+    const levelEntity = await this.levelsService.findByIds(1);
     const existedUser = await this.findOneByEmail(email);
     if (existedUser != null) {
       if (
@@ -38,6 +41,9 @@ export class UsersService {
         );
       }
     }
+    if (!levelEntity || !levelEntity[0]) {
+      throw new HttpException('Level not found.', HttpStatus.BAD_REQUEST);
+    }
     const user = this.usersRepository.create({
       firstName,
       lastName,
@@ -45,9 +51,11 @@ export class UsersService {
       phoneNumber,
     });
     user.roles = rolesEntities;
+    user.level = levelEntity[0];
     user.password = await this.hashPassword(password);
-    console.log(password, user.password);
-    return this.usersRepository.save(user);
+    const userCreated = await this.usersRepository.save(user);
+    delete userCreated.password;
+    return userCreated;
   }
 
   isValidCreateUserData(userData: CreateUserDto | UpdateUserDto) {
@@ -154,7 +162,7 @@ export class UsersService {
   findOneByEmail(email: string) {
     return this.usersRepository.findOne({
       where: { email },
-      relations: ['roles'],
+      relations: ['roles', 'rdvs', 'rdvs.center', 'level'],
     });
   }
 
@@ -211,27 +219,27 @@ export class UsersService {
   }
 
   isValidPassword(password: string) {
-    const lengthRegEx = new RegExp(/^\S{10,30}\S$/m);
-    const upperCaseRegEx = new RegExp(/^.*[A-Z]{3}.*$/m);
-    const lowerCaseRegEx = new RegExp(/^.*[a-z]{3}.*$/m);
-    const numericRegEx = new RegExp(/^.*[\d]{3}.*$/m);
-    const specialRegEx = new RegExp(/^.*[~!@#$%^*\-_=+[{\]}\/;:,.?]{3}.*$/m);
+    const lengthRegEx = new RegExp(/^\S{8,30}\S$/m);
+    const upperCaseRegEx = new RegExp(/^.*[A-Z]{1}.*$/m);
+    const lowerCaseRegEx = new RegExp(/^.*[a-z]{1}.*$/m);
+    const numericRegEx = new RegExp(/^.*[\d]{1}.*$/m);
+    const specialRegEx = new RegExp(/^.*[~!@#$%^*\-_=+[{\]}\/;:,.?]{1}.*$/m);
     let errorMessage = '';
 
     if (!lengthRegEx.test(password)) {
-      errorMessage += 'Password must be between 10 and 30 characters long. ';
+      errorMessage += 'Password must be between 8 and 30 characters long. ';
     }
     if (!upperCaseRegEx.test(password)) {
-      errorMessage += 'Password must contain at least 3 uppercase letters. ';
+      errorMessage += 'Password must contain at least 1 uppercase letters. ';
     }
     if (!lowerCaseRegEx.test(password)) {
-      errorMessage += 'Password must contain at least 3 lowercase letters. ';
+      errorMessage += 'Password must contain at least 1 lowercase letters. ';
     }
     if (!numericRegEx.test(password)) {
-      errorMessage += 'Password must contain at least 3 digits. ';
+      errorMessage += 'Password must contain at least 1 digits. ';
     }
     if (!specialRegEx.test(password)) {
-      errorMessage += 'Password must contain at least 3 special characters. ';
+      errorMessage += 'Password must contain at least 1 special characters. ';
     }
 
     if (errorMessage !== '') {
@@ -243,5 +251,8 @@ export class UsersService {
     if (!phoneNumberRegExp.test(phoneNumber)) {
       throw new HttpException('Invalid phone number.', HttpStatus.BAD_REQUEST);
     }
+  }
+  findById(id: number) {
+    return this.usersRepository.findBy({ id });
   }
 }

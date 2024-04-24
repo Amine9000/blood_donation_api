@@ -13,7 +13,7 @@ import { CreateRdvDto } from '../dto/create-rdv.dto';
 import { UpdateRdvDto } from '../dto/update-rdv.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 
-@Controller('rdv')
+@Controller('rdvs')
 @UseGuards(AuthGuard)
 export class RdvController {
   constructor(private readonly rdvService: RdvService) {}

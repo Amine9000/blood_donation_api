@@ -9,6 +9,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/services/users.service';
 import { compare } from 'bcrypt';
+import { ROLE } from 'src/users/enums/role.enum';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,18 @@ export class AuthService {
       if (!isMatch) {
         throw new UnauthorizedException();
       }
-      const { id, firstName, lastName, email, phoneNumber, roles } = user;
+      const {
+        id,
+        firstName,
+        bio,
+        lastName,
+        email,
+        total_blood,
+        phoneNumber,
+        roles,
+        level,
+        rdvs,
+      } = user;
       const payload = {
         sub: id,
         firstName,
@@ -33,6 +45,17 @@ export class AuthService {
         roles,
       };
       return {
+        id,
+        firstName,
+        lastName,
+        email,
+        bio,
+        total_blood,
+        phoneNumber,
+        level,
+        roles,
+        rdvs,
+        isAdmin: roles.map((role) => role.role).includes(ROLE.ADMIN),
         access_token: await this.jwtSerivce.signAsync(payload),
       };
     } else {

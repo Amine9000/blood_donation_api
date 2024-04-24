@@ -5,9 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Rdv } from './entities/rdv.entity';
 import { Center } from 'src/centers/entities/center.entity';
 import { User } from 'src/users/entities/user.entity';
+import { UsersModule } from 'src/users/users.module';
+import { CentersModule } from 'src/centers/centers.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Rdv, Center, User])],
+  imports: [
+    TypeOrmModule.forFeature([Rdv, Center, User]),
+    UsersModule,
+    CentersModule,
+  ],
   controllers: [RdvController],
   providers: [RdvService],
 })

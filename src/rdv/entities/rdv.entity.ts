@@ -14,16 +14,16 @@ export class Rdv {
   id: number;
 
   @Column({ type: 'datetime' })
-  startDate: Date;
+  date: Date;
 
-  @Column({ type: 'datetime' })
-  endDate: Date;
+  @Column({ default: 1000 })
+  blood_in_mils: number;
 
-  @ManyToOne(() => Center)
+  @ManyToOne(() => Center, (center) => center.rdvs)
   @JoinColumn()
-  center: number;
+  center: Center;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user) => user.rdvs)
   @JoinColumn()
-  user: number;
+  user: User;
 }

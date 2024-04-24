@@ -14,5 +14,6 @@ import { VillesController } from './controllers/villes.controller';
   imports: [TypeOrmModule.forFeature([Region, Ville, Center])],
   controllers: [CentersController, RegionsController, VillesController],
   providers: [CentersService, VillesService, RegionsService],
+  exports: [CentersService],
 })
 export class CentersModule {}

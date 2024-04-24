@@ -10,6 +10,7 @@ import { Center } from './centers/entities/center.entity';
 import { Region } from './centers/entities/region.entity';
 import { Ville } from './centers/entities/ville.entity';
 import { Rdv } from './rdv/entities/rdv.entity';
+import { Level } from './users/entities/level.entity';
 
 @Module({
   imports: [
@@ -20,8 +21,8 @@ import { Rdv } from './rdv/entities/rdv.entity';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'typeorm',
-      entities: [User, Role, Region, Ville, Center, Rdv],
+      database: 'blood_donation_db',
+      entities: [User, Role, Region, Ville, Center, Rdv, Level],
       synchronize: true,
     }),
     CentersModule,

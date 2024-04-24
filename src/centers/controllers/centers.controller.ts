@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { CentersService } from '../services/centers.service';
 import { CreateCenterDto } from '../dto/create-center.dto';
@@ -26,6 +27,11 @@ export class CentersController {
   @Roles(ROLE.ADMIN)
   async create(@Body() createCenterDto: CreateCenterDto) {
     return await this.centersService.create(createCenterDto);
+  }
+
+  @Get('search')
+  search(@Query('q') str: string) {
+    return this.centersService.search(str);
   }
 
   @Get()

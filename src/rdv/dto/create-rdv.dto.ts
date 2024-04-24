@@ -1,6 +1,5 @@
 export class CreateRdvDto {
-  startDate: Date;
-  endDate: Date;
-  center: number;
-  user: number;
+  date: Date;
+  centerId: number;
+  userId: number;
 }

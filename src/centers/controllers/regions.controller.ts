@@ -12,14 +12,11 @@ import {
 import { RegionsService } from '../services/regions.service';
 import { CreateRegionDto } from '../dto/create-region.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { Roles } from 'src/users/decorators/role.decorator';
-import { ROLE } from 'src/users/enums/role.enum';
 import { RolesGuard } from 'src/users/gards/roles.guard';
 
 @Controller('regions')
 @UseGuards(RolesGuard)
 @UseGuards(AuthGuard)
-@Roles(ROLE.ADMIN)
 export class RegionsController {
   constructor(private readonly regionService: RegionsService) {}
 

@@ -7,10 +7,11 @@ import { Center } from 'src/centers/entities/center.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UsersModule } from 'src/users/users.module';
 import { CentersModule } from 'src/centers/centers.module';
+import { Crenau } from './entities/crenau.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Rdv, Center, User]),
+    TypeOrmModule.forFeature([Rdv, Center, User, Crenau]),
     UsersModule,
     CentersModule,
   ],

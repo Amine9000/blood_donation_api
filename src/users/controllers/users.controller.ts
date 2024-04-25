@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UsersService } from '../services/users.service';
@@ -17,7 +18,6 @@ import { ROLE } from '../enums/role.enum';
 @Controller('users')
 @UseGuards(RolesGuard)
 @UseGuards(AuthGuard)
-@Roles(ROLE.ADMIN)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -26,16 +26,24 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get(':id/rdvs')
+  findAllRdvs(@Param('id', ParseIntPipe) id: number) {
+    console.log(id);
+    return this.usersService.findAllRdvs(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
 
+  @Roles(ROLE.ADMIN)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
+  @Roles(ROLE.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);

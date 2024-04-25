@@ -28,6 +28,11 @@ export class RdvController {
     return this.rdvService.findAll();
   }
 
+  @Get('/crenaux')
+  async findAllCrenaux() {
+    return await this.rdvService.findAllCrenaux();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.rdvService.findOne(+id);

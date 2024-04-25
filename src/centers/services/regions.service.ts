@@ -16,7 +16,9 @@ export class RegionsService {
   }
 
   findAll() {
-    return this.regionRepository.find();
+    return this.regionRepository.find({
+      relations: ['villes', 'villes.centers'],
+    });
   }
 
   findOne(id: number) {

@@ -162,7 +162,7 @@ export class UsersService {
   findOneByEmail(email: string) {
     return this.usersRepository.findOne({
       where: { email },
-      relations: ['roles', 'rdvs', 'rdvs.center', 'level'],
+      relations: ['roles', 'level'],
     });
   }
 
@@ -186,6 +186,8 @@ export class UsersService {
     if (updateUserDto.lastName) userExists.lastName = updateUserDto.lastName;
     if (updateUserDto.phoneNumber)
       userExists.phoneNumber = updateUserDto.phoneNumber;
+    if (updateUserDto.total_blood)
+      userExists.total_blood = updateUserDto.total_blood;
     if (updateUserDto.password)
       userExists.password = await this.hashPassword(updateUserDto.password);
 
@@ -254,5 +256,18 @@ export class UsersService {
   }
   findById(id: number) {
     return this.usersRepository.findBy({ id });
+  }
+  async findAllRdvs(id: number) {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: ['rdvs', 'rdvs.center'],
+    });
+    if (user == null) {
+      throw new HttpException(
+        `there is no user with this id:${id}.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return user.rdvs;
   }
 }

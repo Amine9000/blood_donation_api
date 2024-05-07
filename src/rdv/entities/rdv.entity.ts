@@ -2,7 +2,6 @@ import { Center } from 'src/centers/entities/center.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Crenau } from './crenau.entity';
-import RdvState from '../enums/rdv-state-enum';
 
 @Entity({ name: 'rdvs' })
 export class Rdv {
@@ -20,7 +19,4 @@ export class Rdv {
 
   @ManyToOne(() => Crenau, (crenau) => crenau.rdvs)
   crenau: Crenau;
-
-  @Column({ default: RdvState.Pending })
-  state: RdvState;
 }

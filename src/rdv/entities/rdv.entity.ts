@@ -12,9 +12,6 @@ export class Rdv {
   @Column({ type: 'date' })
   date: Date;
 
-  @Column({ default: 1000 })
-  blood_in_mils: number;
-
   @ManyToOne(() => Center, (center) => center.rdvs)
   center: Center;
 

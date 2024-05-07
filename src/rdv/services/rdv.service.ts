@@ -34,7 +34,6 @@ export class RdvService {
         HttpStatus.BAD_REQUEST,
       );
     const userdto = new CreateUserDto();
-    userdto.total_blood = user[0].total_blood + 1000;
     await this.userService.update(userId, userdto);
     console.log(userdto);
     console.log(user[0]);

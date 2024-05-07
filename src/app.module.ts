@@ -10,7 +10,6 @@ import { Center } from './centers/entities/center.entity';
 import { Region } from './centers/entities/region.entity';
 import { Ville } from './centers/entities/ville.entity';
 import { Rdv } from './rdv/entities/rdv.entity';
-import { Level } from './users/entities/level.entity';
 import { Crenau } from './rdv/entities/crenau.entity';
 
 @Module({
@@ -23,7 +22,7 @@ import { Crenau } from './rdv/entities/crenau.entity';
       username: 'root',
       password: '',
       database: 'blood_donation_db',
-      entities: [User, Role, Region, Ville, Center, Rdv, Level, Crenau],
+      entities: [User, Role, Region, Ville, Center, Rdv, Crenau],
       synchronize: true,
     }),
     CentersModule,

@@ -6,7 +6,6 @@ import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { RolesService } from './roles.service';
 import { hash } from 'bcrypt';
-import { LevelsService } from './levels.service';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +13,6 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private readonly rolesService: RolesService,
-    private readonly levelsService: LevelsService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -22,7 +20,6 @@ export class UsersService {
       createUserDto;
     this.isValidCreateUserData(createUserDto);
     const rolesEntities = await this.rolesService.findByIds(roles);
-    const levelEntity = await this.levelsService.findByIds(1);
     const existedUser = await this.findOneByEmail(email);
     if (existedUser != null) {
       if (
@@ -41,9 +38,6 @@ export class UsersService {
         );
       }
     }
-    if (!levelEntity || !levelEntity[0]) {
-      throw new HttpException('Level not found.', HttpStatus.BAD_REQUEST);
-    }
     const user = this.usersRepository.create({
       firstName,
       lastName,
@@ -51,7 +45,6 @@ export class UsersService {
       phoneNumber,
     });
     user.roles = rolesEntities;
-    user.level = levelEntity[0];
     user.password = await this.hashPassword(password);
     const userCreated = await this.usersRepository.save(user);
     delete userCreated.password;
@@ -162,7 +155,7 @@ export class UsersService {
   findOneByEmail(email: string) {
     return this.usersRepository.findOne({
       where: { email },
-      relations: ['roles', 'level'],
+      relations: ['roles'],
     });
   }
 
@@ -186,8 +179,6 @@ export class UsersService {
     if (updateUserDto.lastName) userExists.lastName = updateUserDto.lastName;
     if (updateUserDto.phoneNumber)
       userExists.phoneNumber = updateUserDto.phoneNumber;
-    if (updateUserDto.total_blood)
-      userExists.total_blood = updateUserDto.total_blood;
     if (updateUserDto.password)
       userExists.password = await this.hashPassword(updateUserDto.password);
 

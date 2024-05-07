@@ -24,18 +24,7 @@ export class AuthService {
       if (!isMatch) {
         throw new UnauthorizedException();
       }
-      const {
-        id,
-        firstName,
-        bio,
-        lastName,
-        email,
-        total_blood,
-        phoneNumber,
-        roles,
-        level,
-        rdvs,
-      } = user;
+      const { id, firstName, lastName, email, phoneNumber, roles, rdvs } = user;
       const payload = {
         sub: id,
         firstName,
@@ -49,10 +38,7 @@ export class AuthService {
         firstName,
         lastName,
         email,
-        bio,
-        total_blood,
         phoneNumber,
-        level,
         roles,
         rdvs,
         isAdmin: roles.map((role) => role.role).includes(ROLE.ADMIN),
